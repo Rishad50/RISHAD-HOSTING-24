@@ -890,14 +890,12 @@
                             <table class="file-table" id="file-table">
                                 <thead>
                                     <tr>
-                                        <th style="width: 45%;">Name</th>
-                                        <th style="width: 15%;">Size</th>
-                                        <th style="width: 20%;">Modified</th>
-                                        <th style="width: 20%; text-align: right;">Actions</th>
+                                        <th>Name</th>
+                                        <th style="text-align: right;">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="file-list-body">
-                                    <tr><td colspan="4" class="text-center py-4 text-muted">Loading directory contents...</td></tr>
+                                    <tr><td colspan="2" class="text-center py-4 text-muted">Loading directory contents...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -1267,20 +1265,20 @@
                 this.currentPath = path;
                 this.renderBreadcrumbs();
                 const tbody = document.getElementById("file-list-body");
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-muted">Fetching files...</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="2" class="text-center py-4 text-muted">Fetching files...</td></tr>`;
 
                 try {
                     const res = await api.get(`/api/files/${CONFIG.SERVER_ID}?path=${encodeURIComponent(this.currentPath)}`);
                     const files = res.files || [];
                     if (!files.length) {
-                        tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-muted">Directory is empty</td></tr>`;
+                        tbody.innerHTML = `<tr><td colspan="2" class="text-center py-4 text-muted">Directory is empty</td></tr>`;
                         return;
                     }
                     tbody.innerHTML = "";
 
                     if (this.currentPath !== "") {
                         const tr = document.createElement("tr");
-                        tr.innerHTML = `<td colspan="4"><div class="file-name-cell" onclick="fileManager.navigateUp()"><span class="file-icon file-icon-dir">📁</span><span class="font-mono">..</span></div></td>`;
+                        tr.innerHTML = `<td colspan="2"><div class="file-name-cell" onclick="fileManager.navigateUp()"><span class="file-icon file-icon-dir">📁</span><span class="font-mono">..</span></div></td>`;
                         tbody.appendChild(tr);
                     }
 
@@ -1297,8 +1295,6 @@
                                     <span class="font-mono">${modalHelper.escapeHTML(f.name)}</span>
                                 </div>
                             </td>
-                            <td class="font-mono text-muted">${isDir ? '-' : (f.size_formatted || f.size)}</td>
-                            <td class="text-muted">${f.modified || '-'}</td>
                             <td>
                                 <div class="file-row-actions">
                                     ${!isDir ? `<button class="btn btn-secondary btn-sm" onclick="fileEditor.open('${modalHelper.escapeHTML(fullPath)}')">Edit</button>` : ''}
