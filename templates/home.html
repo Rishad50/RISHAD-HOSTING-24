@@ -1218,26 +1218,16 @@
         /* SERVER CONTROL */
         const serverActions = {
             async start() {
-                const btn = document.getElementById("btn-start");
-                btn.querySelector("span").textContent = "Starting...";
                 try {
                     await api.post(`/api/start/${CONFIG.SERVER_ID}`);
                     toast.success("Server Started", "Process execution initiated");
                 } catch (err) { toast.error("Start Failed", err.message); }
-                finally { 
-                    btn.querySelector("span").textContent = "Start";
-                }
             },
             async stop() {
-                const btn = document.getElementById("btn-stop");
-                btn.querySelector("span").textContent = "Stopping...";
                 try {
                     await api.post(`/api/stop/${CONFIG.SERVER_ID}`);
                     toast.info("Server Stopped", "Process termination sent");
                 } catch (err) { toast.error("Stop Failed", err.message); }
-                finally { 
-                    btn.querySelector("span").textContent = "Stop";
-                }
             },
             async restart() {
                 try {
