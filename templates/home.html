@@ -194,15 +194,11 @@
             overflow-y: auto;
             padding: 1rem;
             background-color: var(--bg-base);
-            display: flex;
-            flex-direction: column;
         }
 
         .tab-pane {
             display: none;
             height: 100%;
-            flex: 1;
-            min-height: 0;
         }
 
         .tab-pane.active {
@@ -222,7 +218,6 @@
             justify-content: flex-start;
             margin-bottom: 0.8rem;
             width: 100%;
-            flex-shrink: 0;
         }
 
         /* Action Buttons */
@@ -320,7 +315,7 @@
         }
 
         /* ==========================================================================
-           TERMINAL / CONSOLE - DYNAMIC AUTO FULL-HEIGHT
+           TERMINAL / CONSOLE - FIXED 550PX HEIGHT
            ========================================================================== */
         .terminal-container {
             background: #000000 !important;
@@ -328,19 +323,23 @@
             border-radius: var(--radius-lg);
             display: flex;
             flex-direction: column;
-            flex: 1;
-            min-height: 0;
+            flex: none;
+            height: 550px !important;
+            min-height: 550px !important;
+            max-height: 550px !important;
             overflow: hidden;
             box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.9), 0 4px 20px rgba(0, 0, 0, 0.4);
         }
 
         .terminal-full {
-            flex: 1;
-            min-height: 0;
+            height: 550px !important;
+            min-height: 550px !important;
+            max-height: 550px !important;
         }
 
         .terminal-screen {
             flex: 1;
+            height: 100%;
             padding: 12px;
             overflow-y: auto;
             overflow-x: auto;
@@ -354,34 +353,6 @@
             -ms-overflow-style: none;
         }
         .terminal-screen::-webkit-scrollbar { display: none; width: 0; height: 0; }
-
-        .terminal-input-bar {
-            display: flex;
-            align-items: center;
-            background: #000000;
-            border-top: 1px solid #1f2430;
-            padding: 0.6rem 0.9rem;
-            gap: 0.6rem;
-            flex-shrink: 0;
-        }
-
-        .terminal-prompt {
-            color: #22c55e;
-            font-weight: 700;
-            font-family: 'Courier New', monospace;
-            font-size: 1rem;
-        }
-
-        .terminal-input {
-            flex: 1;
-            width: 100%;
-            background: transparent;
-            border: none;
-            color: #4ade80;
-            font-size: 0.9rem;
-            outline: none;
-            font-family: 'Courier New', monospace;
-        }
 
         /* Forms */
         .form-group {
@@ -929,13 +900,9 @@
                         </div>
                     </div>
 
-                    <!-- AUTO FULL-HEIGHT TERMINAL -->
+                    <!-- FIXED 550PX TERMINAL (ONLY LOGS/CONSOLE OUTPUT) -->
                     <div class="terminal-container">
                         <pre id="terminal-screen" class="terminal-screen font-mono" tabindex="0"><span class="text-muted">~ $ Ready...</span></pre>
-                        <form id="terminal-form" class="terminal-input-bar" onsubmit="consoleTab.submitCommand(event)">
-                            <span class="terminal-prompt">$</span>
-                            <input type="text" id="terminal-input" class="terminal-input font-mono" placeholder="Type command..." autocomplete="off" spellcheck="false">
-                        </form>
                     </div>
                 </section>
 
@@ -943,10 +910,6 @@
                 <section id="tab-console" class="tab-pane" role="tabpanel">
                     <div class="terminal-container terminal-full">
                         <pre id="tab-terminal-screen" class="terminal-screen font-mono" tabindex="0"><span class="text-muted">~ $ Ready...</span></pre>
-                        <form class="terminal-input-bar" onsubmit="consoleTab.submitTabCommand(event)">
-                            <span class="terminal-prompt">$</span>
-                            <input type="text" id="tab-terminal-input" class="terminal-input font-mono" placeholder="Type command..." autocomplete="off" spellcheck="false">
-                        </form>
                     </div>
                 </section>
 
@@ -1284,44 +1247,16 @@
             }
         };
 
-        /* CONSOLE LOG STREAM & COMMANDS */
+        /* CONSOLE LOG STREAM */
         let lastLogText = "";
         const consoleTab = {
             screen: document.getElementById("terminal-screen"),
-            input: document.getElementById("terminal-input"),
             tabScreen: document.getElementById("tab-terminal-screen"),
-            tabInput: document.getElementById("tab-terminal-input"),
 
             clear() {
                 if (this.screen) this.screen.innerHTML = '<span class="text-muted">~ $ Ready...</span>';
                 if (this.tabScreen) this.tabScreen.innerHTML = '<span class="text-muted">~ $ Ready...</span>';
                 lastLogText = "";
-            },
-            async submitCommand(e) {
-                e.preventDefault();
-                const cmd = this.input.value.trim();
-                if (!cmd) return;
-                if (cmd === "clear" || cmd === "cls") { this.clear(); this.input.value = ""; return; }
-
-                this.input.value = "";
-
-                try {
-                    await api.post("/api/command", { server_id: CONFIG.SERVER_ID, cmd: cmd });
-                    pollLogs();
-                } catch (err) { toast.error("Execution Failed", err.message); }
-            },
-            async submitTabCommand(e) {
-                e.preventDefault();
-                const cmd = this.tabInput.value.trim();
-                if (!cmd) return;
-                if (cmd === "clear" || cmd === "cls") { this.clear(); this.tabInput.value = ""; return; }
-
-                this.tabInput.value = "";
-
-                try {
-                    await api.post("/api/command", { server_id: CONFIG.SERVER_ID, cmd: cmd });
-                    pollLogs();
-                } catch (err) { toast.error("Execution Failed", err.message); }
             }
         };
 
