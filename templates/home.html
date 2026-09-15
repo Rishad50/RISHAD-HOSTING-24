@@ -318,17 +318,20 @@
            TERMINAL / CONSOLE - 8PX COURIER NEW TERMUX ENGINE
            ========================================================================== */
         .terminal-container {
-            background: #000000 !important;
-            border: 1px solid #1f2430;
-            border-radius: var(--radius-lg);
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            height: calc(100vh - 145px);
-            min-height: 460px;
-            overflow: hidden;
-            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.9), 0 4px 20px rgba(0, 0, 0, 0.4);
-        }
+    background: #000000 !important;
+    border: 1px solid #1f2430;
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    
+    /* --- নিচে এই ৩টি লাইন পরিবর্তন করুন --- */
+    flex: none;                 /* যেন নিচে জোর করে বড় না হয় */
+    height: 550px;              /* আপনার পছন্দমতো উচ্চতা দিন (যেমন: 250px বা 300px) */
+    min-height: unset;          /* আগের বড় মিনিমাম হাইট তুলে দেওয়ার জন্য */
+
+    overflow: hidden;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.9), 0 4px 20px rgba(0, 0, 0, 0.4);
+}
 
         .terminal-full {
             height: calc(100vh - 100px);
