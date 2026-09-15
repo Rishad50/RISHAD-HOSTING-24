@@ -2,18 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <!-- Viewport configured to allow pinch-to-zoom -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <meta name="description" content="JUBAYER HOSTING - Cloud Python & Termux Server Management Dashboard">
     <title>JUBAYER HOSTING — Control Panel</title>
-
-    <!-- FontAwesome 6 CDN -->
+    <!-- FontAwesome 6 CDN (ফাইল আইকন ও ৩-ডট মেনুর জন্য) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- ANSI Color Parser Library for Termux Logs -->
+    <!-- ANSI Color Parser Library -->
     <script src="https://cdn.jsdelivr.net/npm/ansi_up@5.1.0/ansi_up.min.js"></script>
-
     <style>
         /* ==========================================================================
-           JUBAYER HOSTING - PREMIUM DARK THEME
+           JUBAYER HOSTING - PROFESSIONAL DARK THEME
            ========================================================================== */
         :root {
             --bg-base: #0c0f14;
@@ -38,12 +37,16 @@
             --color-danger: #ef4444;
             --color-danger-hover: #dc2626;
 
+            --terminal-bg: #000000;
+            --terminal-text: #d1d5db;
+            --terminal-prompt: #22c55e;
+
             --radius-sm: 4px;
             --radius-md: 8px;
             --radius-lg: 12px;
 
-            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-            --font-mono: 'Courier New', "JetBrains Mono", Consolas, monospace;
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            --font-mono: 'Courier New', "JetBrains Mono", "Fira Code", "Cascadia Code", Consolas, Menlo, Monaco, monospace;
         }
 
         * {
@@ -81,7 +84,7 @@
             overflow: hidden;
         }
 
-        /* Top Header */
+        /* Top Header - CENTERED BRANDING */
         .top-header {
             height: 60px;
             background-color: var(--bg-surface);
@@ -97,26 +100,26 @@
         .header-menu-toggle {
             position: absolute;
             left: 1.2rem;
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 1.25rem;
+        }
+
+        .brand {
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .header-menu-toggle:hover { color: var(--text-main); }
 
         .brand-name {
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             font-weight: 800;
             letter-spacing: 0.5px;
-            user-select: none;
+            text-align: center;
         }
-        .brand-accent { color: var(--color-primary); }
 
-        /* Main Body & Sidebar */
+        .brand-accent {
+            color: var(--color-primary);
+        }
+
+        /* Main Body with Sidebar */
         .main-body {
             display: flex;
             flex: 1;
@@ -157,11 +160,12 @@
             text-align: left;
             transition: all 0.15s ease;
         }
-        .nav-item i { width: 18px; text-align: center; font-size: 1rem; }
+
         .nav-item:hover {
             background: var(--bg-card);
             color: var(--text-main);
         }
+
         .nav-item.active {
             background: rgba(59, 130, 246, 0.18);
             color: var(--color-primary);
@@ -171,12 +175,18 @@
         .sidebar-backdrop {
             display: none;
             position: fixed;
-            top: 60px; left: 0; right: 0; bottom: 0;
+            top: 60px;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(2px);
             z-index: 30;
         }
-        .sidebar-backdrop.show { display: block; }
+
+        .sidebar-backdrop.show {
+            display: block;
+        }
 
         /* Content Area */
         .content-wrapper {
@@ -190,6 +200,7 @@
             display: none;
             height: 100%;
         }
+
         .tab-pane.active {
             display: flex;
             flex-direction: column;
@@ -203,13 +214,13 @@
 
         .panel-header-row {
             display: flex;
-            flex-direction: column;
-            gap: 0.65rem;
-            margin-bottom: 0.9rem;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 0.8rem;
             width: 100%;
         }
 
-        /* Buttons & Action Bar */
+        /* Action Buttons */
         .action-btn-group {
             display: flex;
             align-items: center;
@@ -222,7 +233,7 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.45rem;
+            gap: 0.4rem;
             padding: 0.65rem 0.6rem;
             border-radius: var(--radius-md);
             font-size: 0.85rem;
@@ -233,12 +244,18 @@
             user-select: none;
             flex: 1;
             white-space: nowrap;
+            opacity: 1 !important;
         }
 
         .btn-sm {
             padding: 0.35rem 0.7rem;
             font-size: 0.8rem;
             flex: none;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .btn-primary { background: var(--color-primary); color: #fff; }
@@ -274,6 +291,7 @@
             align-items: center;
             justify-content: center;
         }
+
         .icon-btn:hover { color: var(--text-main); }
         .mobile-only { display: none; }
 
@@ -284,17 +302,21 @@
             border-radius: var(--radius-lg);
             padding: 1.25rem;
         }
+
         .card-header {
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 0.8rem;
             margin-bottom: 1rem;
         }
+
         .card-title {
             font-size: 1rem;
             font-weight: 700;
         }
 
-        /* Terminal - 8px Termux Font */
+        /* ==========================================================================
+           TERMINAL / CONSOLE - 8PX COURIER NEW TERMUX ENGINE
+           ========================================================================== */
         .terminal-container {
             background: #000000 !important;
             border: 1px solid #1f2430;
@@ -303,12 +325,14 @@
             flex-direction: column;
             flex: 1;
             height: calc(100vh - 145px);
-            min-height: 440px;
+            min-height: 460px;
             overflow: hidden;
             box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.9), 0 4px 20px rgba(0, 0, 0, 0.4);
         }
 
-        .terminal-full { height: calc(100vh - 100px); }
+        .terminal-full {
+            height: calc(100vh - 100px);
+        }
 
         .terminal-screen {
             flex: 1;
@@ -318,7 +342,7 @@
             color: #d1d5db;
             background: #000000 !important;
             font-family: 'Courier New', monospace;
-            font-size: 8px; /* ৮ পিক্সেল সাইজ */
+            font-size: 8px; /* টেক্সট সাইজ ৮ পিক্সেল */
             line-height: 1.35;
             white-space: pre;
             scrollbar-width: none;
@@ -334,12 +358,14 @@
             padding: 0.6rem 0.9rem;
             gap: 0.6rem;
         }
+
         .terminal-prompt {
             color: #22c55e;
             font-weight: 700;
             font-family: 'Courier New', monospace;
             font-size: 1rem;
         }
+
         .terminal-input {
             flex: 1;
             width: 100%;
@@ -351,30 +377,77 @@
             font-family: 'Courier New', monospace;
         }
 
-        /* File Manager & Table */
+        /* Forms */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .form-label {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .form-control {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 0.6rem 0.8rem;
+            color: var(--text-main);
+            font-size: 0.88rem;
+            outline: none;
+            transition: border-color 0.15s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--border-focus);
+        }
+
+        .form-hint {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .form-actions .btn {
+            flex: none;
+        }
+
+        /* ==========================================================================
+           UPDATED: FILES UI (3-DOTS DROPDOWN + MODERN TABLE)
+           ========================================================================== */
+        .file-browser-card {
+            padding: 0;
+            overflow: visible;
+        }
+
         .breadcrumb-container {
             display: flex;
             align-items: center;
             gap: 6px;
             font-size: 0.88rem;
             color: var(--text-dim);
+            margin-bottom: 0.5rem;
+            width: 100%;
             overflow-x: auto;
             white-space: nowrap;
         }
+
         .breadcrumb-item {
+            cursor: pointer;
             color: var(--color-primary);
             font-weight: 600;
-            cursor: pointer;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 5px;
         }
         .breadcrumb-item:hover { text-decoration: underline; }
-
-        .file-browser-card {
-            padding: 0;
-            overflow: visible;
-        }
 
         .table-responsive {
             overflow: visible;
@@ -394,9 +467,10 @@
             font-weight: 600;
             padding: 10px 14px;
             border-bottom: 1px solid var(--border-color);
-            font-size: 0.78rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
         }
+
         .file-table th:first-child { border-top-left-radius: var(--radius-lg); }
         .file-table th:last-child { border-top-right-radius: var(--radius-lg); }
 
@@ -405,8 +479,10 @@
             border-bottom: 1px solid var(--border-color);
             vertical-align: middle;
         }
-        .file-table tr:last-child td { border-bottom: none; }
-        .file-table tr:hover td { background-color: var(--bg-card-hover); }
+
+        .file-table tr:hover td {
+            background-color: var(--bg-card-hover);
+        }
 
         .file-name-cell {
             display: flex;
@@ -420,15 +496,15 @@
         .file-icon {
             width: 20px;
             text-align: center;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             flex-shrink: 0;
         }
 
-        /* 3-Dots Dropdown Menu */
+        /* 3-Dots Dropdown */
         .action-cell {
             position: relative;
             text-align: right;
-            width: 46px;
+            width: 48px;
         }
 
         .dot-btn {
@@ -436,12 +512,12 @@
             border: none;
             color: var(--text-muted);
             cursor: pointer;
-            padding: 6px 12px;
+            padding: 6px 10px;
             border-radius: 6px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.05rem;
+            font-size: 1rem;
             transition: 0.15s;
         }
         .dot-btn:hover, .dot-btn.active {
@@ -452,7 +528,7 @@
         .dropdown-menu {
             display: none;
             position: absolute;
-            right: 10px;
+            right: 8px;
             top: calc(100% - 2px);
             background: #18202c;
             border: 1px solid var(--border-color);
@@ -464,6 +540,7 @@
             padding: 5px;
             animation: fadeIn 0.15s ease-out;
         }
+
         .dropdown-menu.show { display: flex; }
 
         .dropdown-item {
@@ -491,43 +568,90 @@
             color: var(--color-danger);
         }
 
-        /* Forms */
-        .form-group {
+        /* Modals Generic */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(4, 7, 12, 0.82);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 0.75rem;
+        }
+
+        .modal-backdrop.show {
+            display: flex;
+        }
+
+        .modal-window {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
             display: flex;
             flex-direction: column;
-            gap: 0.4rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
         }
-        .form-label {
-            font-size: 0.82rem;
-            font-weight: 600;
-            color: var(--text-muted);
-        }
-        .form-control {
-            background: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 0.65rem 0.85rem;
-            color: var(--text-main);
-            font-size: 0.88rem;
-            outline: none;
-            transition: border-color 0.15s ease;
-        }
-        .form-control:focus { border-color: var(--border-focus); }
-        .form-hint { font-size: 0.75rem; color: var(--text-dim); }
-        .form-actions { display: flex; gap: 0.75rem; }
-        .form-actions .btn { flex: none; }
 
-        /* Fullscreen Code Editor */
+        .modal-compact {
+            width: 100%;
+            max-width: 440px;
+            padding: 1.25rem;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        .modal-body {
+            padding: 1rem 0;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.6rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .modal-footer .btn {
+            flex: none;
+        }
+
+        /* ==========================================================================
+           FULL-SCREEN CODE EDITOR
+           ========================================================================== */
         .editor-fullscreen-page {
             position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             background: #0d1117;
             z-index: 999;
             display: none;
             flex-direction: column;
             overflow: hidden;
         }
-        .editor-fullscreen-page.show { display: flex; }
+
+        .editor-fullscreen-page.show {
+            display: flex;
+        }
 
         .editor-header {
             height: 52px;
@@ -537,26 +661,16 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 0.85rem;
+            user-select: none;
             gap: 0.5rem;
             flex-shrink: 0;
-        }
-
-        .editor-filename-badge {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
-            color: #c9d1d9;
-            max-width: 40%;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
         }
 
         .editor-actions {
             display: flex;
             align-items: center;
             gap: 0.45rem;
+            flex-shrink: 0;
         }
 
         .zoom-btn-group {
@@ -566,6 +680,7 @@
             border-radius: 6px;
             overflow: hidden;
         }
+
         .btn-zoom {
             background: transparent;
             border: none;
@@ -575,8 +690,13 @@
             font-weight: 700;
             cursor: pointer;
             font-family: var(--font-mono);
+            transition: background 0.15s;
         }
-        .btn-zoom:hover { background: #30363d; color: #fff; }
+
+        .btn-zoom:hover {
+            background: #30363d;
+            color: #fff;
+        }
 
         .btn-save-editor {
             background: #238636;
@@ -586,10 +706,7 @@
             border-radius: 6px;
             border: 1px solid rgba(240, 246, 252, 0.1);
             font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(35, 134, 54, 0.35);
         }
         .btn-save-editor:hover { background: #2ea043; }
 
@@ -601,7 +718,6 @@
             font-size: 0.82rem;
             border-radius: 6px;
             font-weight: 600;
-            cursor: pointer;
         }
         .btn-close-editor:hover { background: #30363d; color: #fff; }
 
@@ -611,7 +727,9 @@
             background: #0d1117;
             overflow: hidden;
             position: relative;
+            width: 100%;
         }
+
         .editor-textarea {
             flex: 1;
             width: 100%;
@@ -630,8 +748,13 @@
             white-space: pre-wrap;
             word-break: break-word;
             overflow-y: auto;
+            overflow-x: hidden;
             caret-color: #38bdf8;
             -webkit-overflow-scrolling: touch;
+        }
+
+        .editor-textarea::selection {
+            background: rgba(56, 189, 248, 0.28);
         }
 
         .editor-statusbar {
@@ -649,50 +772,17 @@
             flex-shrink: 0;
         }
 
-        /* Modal Dialog */
-        .modal-backdrop {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(4, 7, 12, 0.82);
-            backdrop-filter: blur(6px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            padding: 0.75rem;
-        }
-        .modal-backdrop.show { display: flex; }
-        .modal-window {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.7);
-            overflow: hidden;
-            width: 100%;
-            max-width: 440px;
-            padding: 1.25rem;
-        }
-        .modal-header {
+        .statusbar-left, .statusbar-right {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding-bottom: 0.8rem;
-            border-bottom: 1px solid var(--border-color);
+            gap: 0.4rem;
         }
-        .modal-title { font-size: 1.05rem; font-weight: 700; }
-        .modal-body { padding: 1rem 0; }
-        .modal-footer {
-            display: flex;
-            justify-content: flex-end;
-            gap: 0.6rem;
-            padding-top: 0.8rem;
-            border-top: 1px solid var(--border-color);
-        }
-        .modal-footer .btn { flex: none; }
 
-        /* Toast Notifications */
+        .statusbar-divider {
+            color: #30363d;
+        }
+
+        /* Toast Container */
         .toast-container {
             position: fixed;
             bottom: 20px;
@@ -704,6 +794,7 @@
             max-width: 360px;
             width: calc(100% - 40px);
         }
+
         .toast {
             display: flex;
             align-items: flex-start;
@@ -712,33 +803,53 @@
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
             animation: slideIn 0.25s ease-out;
         }
+
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
+
         .toast-success { border-left: 4px solid var(--color-success); }
         .toast-error { border-left: 4px solid var(--color-danger); }
+        .toast-warning { border-left: 4px solid var(--color-warning); }
         .toast-info { border-left: 4px solid var(--color-primary); }
-        .toast-content { flex: 1; font-size: 0.82rem; }
-        .toast-title { font-weight: 700; margin-bottom: 2px; }
 
-        /* Responsive Mobile Rules */
+        .toast-content {
+            flex: 1;
+            font-size: 0.82rem;
+        }
+
+        .toast-title {
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        /* Responsive Rules */
         @media (max-width: 860px) {
             .sidebar {
                 position: fixed;
-                left: 0; top: 60px; bottom: 0;
+                left: 0;
+                top: 60px;
+                bottom: 0;
                 z-index: 40;
                 transform: translateX(-100%);
             }
+
             .sidebar.open {
                 transform: translateX(0);
                 box-shadow: 10px 0 25px rgba(0, 0, 0, 0.8);
             }
-            .mobile-only { display: flex; }
-            .content-wrapper { padding: 0.8rem; }
+
+            .mobile-only {
+                display: flex;
+            }
+
+            .content-wrapper {
+                padding: 0.8rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -749,14 +860,14 @@
         }
     </style>
 </head>
-<body>
+<body class="dark-theme">
     <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
 
     <div class="app-layout">
-        <!-- Centered Header -->
+        <!-- Top Navbar with Centered JUBAYER HOSTING -->
         <header class="top-header">
-            <button id="mobile-menu-btn" class="header-menu-toggle mobile-only" onclick="toggleSidebar()" aria-label="Open Navigation">
-                <i class="fa-solid fa-bars"></i>
+            <button id="mobile-menu-btn" class="icon-btn mobile-only header-menu-toggle" aria-label="Toggle Sidebar Navigation">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
             </button>
             <div class="brand">
                 <span class="brand-name">JUBAYER <span class="brand-accent">HOSTING</span></span>
@@ -770,20 +881,20 @@
             <!-- Sidebar Navigation -->
             <aside id="sidebar" class="sidebar">
                 <nav class="nav-menu" role="tablist">
-                    <button class="nav-item active" data-tab="dashboard">
-                        <i class="fa-solid fa-table-columns"></i>
+                    <button class="nav-item active" data-tab="dashboard" role="tab" aria-selected="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                         <span>Dashboard</span>
                     </button>
-                    <button class="nav-item" data-tab="console">
-                        <i class="fa-solid fa-terminal"></i>
+                    <button class="nav-item" data-tab="console" role="tab" aria-selected="false">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
                         <span>Console</span>
                     </button>
-                    <button class="nav-item" data-tab="files">
-                        <i class="fa-solid fa-folder-open"></i>
+                    <button class="nav-item" data-tab="files" role="tab" aria-selected="false">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
                         <span>Files</span>
                     </button>
-                    <button class="nav-item" data-tab="startup">
-                        <i class="fa-solid fa-sliders"></i>
+                    <button class="nav-item" data-tab="startup" role="tab" aria-selected="false">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         <span>Startup</span>
                     </button>
                 </nav>
@@ -793,29 +904,29 @@
             <main class="content-wrapper">
 
                 <!-- 1. DASHBOARD TAB -->
-                <section id="tab-dashboard" class="tab-pane active">
+                <section id="tab-dashboard" class="tab-pane active" role="tabpanel">
                     <div class="panel-header-row">
-                        <!-- Single Line Server Actions -->
+                        <!-- START, STOP, RESTART ALL IN ONE SINGLE LINE -->
                         <div class="action-btn-group">
                             <button id="btn-start" class="btn btn-success" onclick="serverActions.start()">
-                                <i class="fa-solid fa-play"></i>
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                                 <span>Start</span>
                             </button>
                             <button id="btn-stop" class="btn btn-danger" onclick="serverActions.stop()">
-                                <i class="fa-solid fa-stop"></i>
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg>
                                 <span>Stop</span>
                             </button>
                             <button id="btn-restart" class="btn btn-warning" onclick="serverActions.restart()">
-                                <i class="fa-solid fa-rotate-right"></i>
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"></polyline><polyline points="23 20 23 14 17 14"></polyline><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path></svg>
                                 <span>Restart</span>
                             </button>
                         </div>
                     </div>
 
-                    <!-- 8px Termux Black Terminal -->
+                    <!-- FULL SCREEN INTERACTIVE TERMINAL (8PX JET BLACK) -->
                     <div class="terminal-container">
                         <pre id="terminal-screen" class="terminal-screen font-mono" tabindex="0"><span class="text-muted">~ $ Ready...</span></pre>
-                        <form class="terminal-input-bar" onsubmit="consoleTab.submitCommand(event)">
+                        <form id="terminal-form" class="terminal-input-bar" onsubmit="consoleTab.submitCommand(event)">
                             <span class="terminal-prompt">$</span>
                             <input type="text" id="terminal-input" class="terminal-input font-mono" placeholder="Type command..." autocomplete="off" spellcheck="false">
                         </form>
@@ -823,7 +934,7 @@
                 </section>
 
                 <!-- 2. CONSOLE TAB -->
-                <section id="tab-console" class="tab-pane">
+                <section id="tab-console" class="tab-pane" role="tabpanel">
                     <div class="terminal-container terminal-full">
                         <pre id="tab-terminal-screen" class="terminal-screen font-mono" tabindex="0"><span class="text-muted">~ $ Ready...</span></pre>
                         <form class="terminal-input-bar" onsubmit="consoleTab.submitTabCommand(event)">
@@ -833,40 +944,38 @@
                     </div>
                 </section>
 
-                <!-- 3. FILES TAB WITH 3-DOTS MENU -->
-                <section id="tab-files" class="tab-pane">
-                    <div class="panel-header-row">
+                <!-- 3. FILES TAB (UPDATED WITH 3-DOTS MENU & ICONS) -->
+                <section id="tab-files" class="tab-pane" role="tabpanel">
+                    <div class="panel-header-row" style="flex-direction: column; gap: 0.5rem; align-items: flex-start;">
                         <div class="breadcrumb-container" id="file-breadcrumbs">
                             <span class="breadcrumb-item" onclick="fileManager.navigate('')">
-                                <i class="fa-solid fa-house"></i>
-                                /root
+                                <i class="fa-solid fa-house"></i> /root
                             </span>
                         </div>
                         <div class="action-btn-group">
                             <input type="file" id="file-upload-input" multiple style="display: none;" onchange="fileManager.handleUpload(event)">
                             <button class="btn btn-secondary" onclick="document.getElementById('file-upload-input').click()">
-                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                                 <span>Upload</span>
                             </button>
                             <button class="btn btn-secondary" onclick="fileManager.openNewFolderModal()">
-                                <i class="fa-solid fa-folder-plus"></i>
-                                <span>Folder</span>
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><line x1="12" y1="11" x2="12" y2="17"></line><line x1="9" y1="14" x2="15" y2="14"></line></svg>
+                                <span>New Folder</span>
                             </button>
                             <button class="btn btn-primary" onclick="fileManager.openNewFileModal()">
-                                <i class="fa-solid fa-plus"></i>
-                                <span>File</span>
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                <span>New File</span>
                             </button>
                         </div>
                     </div>
 
-                    <!-- Clean Files Card & Table -->
                     <div class="card file-browser-card">
                         <div class="table-responsive">
                             <table class="file-table" id="file-table">
                                 <thead>
                                     <tr>
                                         <th>Name</th>
-                                        <th style="text-align: right; width: 60px;">Action</th>
+                                        <th style="text-align: right; width: 50px;">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody id="file-list-body">
@@ -878,27 +987,31 @@
                 </section>
 
                 <!-- 4. STARTUP TAB -->
-                <section id="tab-startup" class="tab-pane">
+                <section id="tab-startup" class="tab-pane" role="tabpanel">
                     <div class="card max-w-700">
                         <div class="card-header">
-                            <h2 class="card-title"><i class="fa-solid fa-gear" style="margin-right: 8px;"></i>Startup Configuration</h2>
+                            <h2 class="card-title">Startup Configuration</h2>
                         </div>
                         <form id="startup-form" onsubmit="startupConfig.save(event)">
                             <div class="form-group">
                                 <label for="startup-main-file" class="form-label">Main Entrypoint Script</label>
-                                <input type="text" id="startup-main-file" class="form-control font-mono" placeholder="main.py" required>
-                                <small class="form-hint">The primary Python script executed upon starting the instance.</small>
+                                <div class="input-with-hint">
+                                    <input type="text" id="startup-main-file" class="form-control font-mono" placeholder="main.py" required>
+                                    <small class="form-hint">The primary Python script executed upon starting the instance.</small>
+                                </div>
                             </div>
 
                             <div class="form-group mt-3">
                                 <label for="startup-req-file" class="form-label">Requirements Dependency File</label>
-                                <input type="text" id="startup-req-file" class="form-control font-mono" placeholder="requirements.txt">
-                                <small class="form-hint">Passed automatically during pip install routines.</small>
+                                <div class="input-with-hint">
+                                    <input type="text" id="startup-req-file" class="form-control font-mono" placeholder="requirements.txt">
+                                    <small class="form-hint">Passed automatically during pip install routines.</small>
+                                </div>
                             </div>
 
                             <div class="form-actions mt-4">
                                 <button type="submit" id="btn-save-startup" class="btn btn-primary">
-                                    <i class="fa-solid fa-floppy-disk"></i>
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline></svg>
                                     <span>Save Configuration</span>
                                 </button>
                                 <button type="button" class="btn btn-secondary" onclick="startupConfig.load()">Reset</button>
@@ -914,19 +1027,15 @@
     <!-- FULLSCREEN CODE EDITOR -->
     <div id="editor-page" class="editor-fullscreen-page" aria-hidden="true">
         <div class="editor-header">
-            <div class="editor-filename-badge">
-                <i class="fa-solid fa-file-code" style="color: var(--color-primary);"></i>
-                <span id="editor-filename" class="font-mono">file.py</span>
-            </div>
-
+            <span id="editor-filename" class="font-mono text-muted" style="font-size: 0.85rem;">editing file</span>
             <div class="editor-actions">
-                <div class="zoom-btn-group" title="Adjust Font Size">
-                    <button class="btn-zoom" onclick="fileEditor.zoomOut()">A-</button>
-                    <button class="btn-zoom" onclick="fileEditor.zoomIn()">A+</button>
+                <div class="zoom-btn-group" title="Zoom Font Size">
+                    <button class="btn-zoom" onclick="fileEditor.zoomOut()" title="Zoom Out">A-</button>
+                    <button class="btn-zoom" onclick="fileEditor.zoomIn()" title="Zoom In">A+</button>
                 </div>
 
                 <button id="editor-save-btn" class="btn-save-editor" onclick="fileEditor.save()">
-                    <i class="fa-solid fa-floppy-disk"></i>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path></svg>
                     <span>Save</span>
                 </button>
                 <button class="btn-close-editor" onclick="fileEditor.close()">
@@ -942,9 +1051,9 @@
         <div class="editor-statusbar">
             <div class="statusbar-left">
                 <span id="editor-stat-lines">1 line</span>
-                <span>·</span>
+                <span class="statusbar-divider">·</span>
                 <span>UTF-8</span>
-                <span>·</span>
+                <span class="statusbar-divider">·</span>
                 <span id="editor-stat-lang">Python</span>
             </div>
             <div class="statusbar-right">
@@ -953,11 +1062,11 @@
         </div>
     </div>
 
-    <!-- CLEAN CUSTOM PROMPT / CONFIRM MODAL -->
+    <!-- CONFIRMATION / PROMPT MODAL -->
     <div id="prompt-modal" class="modal-backdrop" aria-hidden="true">
-        <div class="modal-window">
+        <div class="modal-window modal-compact">
             <div class="modal-header">
-                <h3 id="prompt-modal-title" class="modal-title">Confirmation</h3>
+                <h3 id="prompt-modal-title" class="modal-title">Action Confirmation</h3>
                 <button class="icon-btn" onclick="modalHelper.closePrompt()">✕</button>
             </div>
             <div class="modal-body">
@@ -979,9 +1088,11 @@
 
         const CONFIG = {
             SERVER_ID: "default",
+            STATS_POLL_INTERVAL: 3000,
             LOGS_POLL_INTERVAL: 1500
         };
 
+        // ANSI Color Parser
         const ansiUp = new AnsiUp();
 
         /* API CLIENT */
@@ -1017,7 +1128,7 @@
             }
         };
 
-        /* TOAST SYSTEM */
+        /* TOAST NOTIFICATIONS */
         const toast = {
             container: document.getElementById("toast-container"),
             show(type, title, message, timeout = 3500) {
@@ -1038,7 +1149,7 @@
             info(t, m = "") { this.show("info", t, m); }
         };
 
-        /* MODAL HELPER (SweetAlert Style Custom Dialog) */
+        /* MODAL HELPER */
         const modalHelper = {
             promptModal: document.getElementById("prompt-modal"),
             titleEl: document.getElementById("prompt-modal-title"),
@@ -1099,6 +1210,7 @@
             const sidebar = document.getElementById("sidebar");
             const backdrop = document.getElementById("sidebar-backdrop");
             const isOpen = forceState !== undefined ? forceState : !sidebar.classList.contains("open");
+            
             sidebar.classList.toggle("open", isOpen);
             backdrop.classList.toggle("show", isOpen);
         }
@@ -1108,21 +1220,30 @@
             const navItems = document.querySelectorAll(".nav-item");
             navItems.forEach(btn => {
                 btn.addEventListener("click", () => {
-                    navItems.forEach(b => b.classList.remove("active"));
+                    navItems.forEach(b => {
+                        b.classList.remove("active");
+                        b.setAttribute("aria-selected", "false");
+                    });
                     document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
 
                     btn.classList.add("active");
+                    btn.setAttribute("aria-selected", "true");
                     const target = btn.getAttribute("data-tab");
                     const targetPane = document.getElementById(`tab-${target}`);
                     if (targetPane) targetPane.classList.add("active");
 
                     if (target === "files") fileManager.load();
                     if (target === "startup") startupConfig.load();
-                    if (target === "console" || target === "dashboard") pollLogs();
+                    if (target === "console" || target === "dashboard") {
+                        pollLogs();
+                    }
 
                     toggleSidebar(false);
                 });
             });
+
+            const mobileBtn = document.getElementById("mobile-menu-btn");
+            mobileBtn.addEventListener("click", () => toggleSidebar());
         }
 
         /* SERVER CONTROL */
@@ -1134,7 +1255,9 @@
                     await api.post(`/api/start/${CONFIG.SERVER_ID}`);
                     toast.success("Server Started", "Process execution initiated");
                 } catch (err) { toast.error("Start Failed", err.message); }
-                finally { btn.querySelector("span").textContent = "Start"; }
+                finally { 
+                    btn.querySelector("span").textContent = "Start";
+                }
             },
             async stop() {
                 const btn = document.getElementById("btn-stop");
@@ -1143,7 +1266,9 @@
                     await api.post(`/api/stop/${CONFIG.SERVER_ID}`);
                     toast.info("Server Stopped", "Process termination sent");
                 } catch (err) { toast.error("Stop Failed", err.message); }
-                finally { btn.querySelector("span").textContent = "Stop"; }
+                finally { 
+                    btn.querySelector("span").textContent = "Stop";
+                }
             },
             async restart() {
                 try {
@@ -1153,7 +1278,7 @@
             }
         };
 
-        /* TERMINAL / LOGS */
+        /* CONSOLE LOG STREAM & COMMANDS */
         let lastLogText = "";
         const consoleTab = {
             screen: document.getElementById("terminal-screen"),
@@ -1171,6 +1296,7 @@
                 const cmd = this.input.value.trim();
                 if (!cmd) return;
                 if (cmd === "clear" || cmd === "cls") { this.clear(); this.input.value = ""; return; }
+
                 this.input.value = "";
 
                 try {
@@ -1183,6 +1309,7 @@
                 const cmd = this.tabInput.value.trim();
                 if (!cmd) return;
                 if (cmd === "clear" || cmd === "cls") { this.clear(); this.tabInput.value = ""; return; }
+
                 this.tabInput.value = "";
 
                 try {
@@ -1215,10 +1342,13 @@
             } catch (e) {}
         }
 
-        /* FILE MANAGER WITH 3-DOTS MENU & FONTAWESOME */
+        /* ==========================================================================
+           UPDATED FILE MANAGER (WITH 3-DOTS DROPDOWN ACTIONS)
+           ========================================================================== */
         const fileManager = {
             currentPath: "",
 
+            // FontAwesome File Icon Helper
             getFileIcon(filename, isDir, isZip) {
                 if (isDir) return `<i class="fa-solid fa-folder" style="color: #f59e0b;"></i>`;
                 if (isZip || filename.endsWith('.zip')) return `<i class="fa-solid fa-file-zipper" style="color: #ec4899;"></i>`;
@@ -1286,9 +1416,7 @@
                         `;
                         tbody.appendChild(tr);
                     });
-                } catch (err) {
-                    toast.error("Files Error", err.message);
-                }
+                } catch (err) { toast.error("Files Error", err.message); }
             },
 
             toggleDropdown(e, btn) {
@@ -1306,12 +1434,7 @@
 
             renderBreadcrumbs() {
                 const bc = document.getElementById("file-breadcrumbs");
-                bc.innerHTML = `
-                    <span class="breadcrumb-item" onclick="fileManager.navigate('')">
-                        <i class="fa-solid fa-house"></i>
-                        /root
-                    </span>
-                `;
+                bc.innerHTML = `<span class="breadcrumb-item" onclick="fileManager.navigate('')"><i class="fa-solid fa-house"></i> /root</span>`;
                 if (!this.currentPath) return;
                 const parts = this.currentPath.split("/").filter(Boolean);
                 let acc = "";
@@ -1321,7 +1444,6 @@
                     bc.innerHTML += ` / <span class="breadcrumb-item" onclick="fileManager.navigate('${target}')">${modalHelper.escapeHTML(p)}</span>`;
                 });
             },
-
             navigate(path) { this.load(path); },
             navigateUp() {
                 const parts = this.currentPath.split("/").filter(Boolean);
@@ -1333,42 +1455,38 @@
                 else fileEditor.open(path);
             },
             async openNewFileModal() {
-                const name = await modalHelper.prompt("Create New File", "Enter file name (e.g. app.py):");
+                const name = await modalHelper.prompt("Create File", "File name (e.g. app.py):");
                 if (!name) return;
                 const path = this.currentPath ? `${this.currentPath}/${name}` : name;
                 await api.post(`/api/file/${CONFIG.SERVER_ID}`, { path, content: "" });
-                toast.success("Created file", name);
                 this.load();
                 fileEditor.open(path);
             },
             async openNewFolderModal() {
-                const name = await modalHelper.prompt("Create New Folder", "Enter folder name:");
+                const name = await modalHelper.prompt("Create Folder", "Folder name:");
                 if (!name) return;
                 const path = this.currentPath ? `${this.currentPath}/${name}` : name;
                 await api.post(`/api/create_folder/${CONFIG.SERVER_ID}`, { path, folder_name: name });
-                toast.success("Created folder", name);
                 this.load();
             },
             async renameItem(oldPath) {
                 const currentName = oldPath.split("/").pop();
-                const newName = await modalHelper.prompt("Rename Item", "Enter new name:", currentName);
+                const newName = await modalHelper.prompt("Rename", "New name:", currentName);
                 if (!newName || newName === currentName) return;
                 const parentDir = oldPath.includes("/") ? oldPath.substring(0, oldPath.lastIndexOf("/")) : "";
                 const newPath = parentDir ? `${parentDir}/${newName}` : newName;
                 await api.post(`/api/rename/${CONFIG.SERVER_ID}`, { old_path: oldPath, new_path: newPath });
-                toast.success("Renamed", newName);
                 this.load();
             },
             async extractZip(filePath) {
                 await api.post(`/api/extract/${CONFIG.SERVER_ID}`, { file_path: filePath, target_path: this.currentPath || "" });
-                toast.success("Extraction Done", filePath);
+                toast.success("Extracted ZIP", filePath);
                 this.load();
             },
             async deleteItem(path) {
-                const confirmed = await modalHelper.confirm("Delete File/Folder", `Are you sure you want to delete "${path}"?`, true);
+                const confirmed = await modalHelper.confirm("Confirm Deletion", `Delete "${path}"?`, true);
                 if (!confirmed) return;
                 await api.delete(`/api/file/${CONFIG.SERVER_ID}`, { path });
-                toast.info("Deleted", path);
                 this.load();
             },
             async handleUpload(e) {
@@ -1384,13 +1502,13 @@
             }
         };
 
-        // Close dropdown when clicked anywhere outside
+        // Close dropdown when clicking outside
         document.addEventListener('click', () => {
             document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('show'));
             document.querySelectorAll('.dot-btn').forEach(btn => btn.classList.remove('active'));
         });
 
-        /* CODE EDITOR */
+        /* FULLSCREEN CODE EDITOR CONTROLLER */
         const fileEditor = {
             page: document.getElementById("editor-page"),
             textarea: document.getElementById("editor-textarea"),
@@ -1404,10 +1522,19 @@
             fontSize: 13,
 
             detectLanguage(filename) {
-                if (!filename) return "Text";
+                if (!filename) return "Plain Text";
                 const ext = filename.split('.').pop().toLowerCase();
-                const map = { py: "Python", js: "JavaScript", json: "JSON", html: "HTML", css: "CSS", sh: "Shell", txt: "Text", md: "Markdown" };
-                return map[ext] || "Text";
+                const map = {
+                    py: "Python",
+                    js: "JavaScript",
+                    json: "JSON",
+                    html: "HTML",
+                    css: "CSS",
+                    sh: "Shell",
+                    txt: "Text",
+                    md: "Markdown"
+                };
+                return map[ext] || "Plain Text";
             },
 
             zoomIn() {
@@ -1416,12 +1543,14 @@
                     this.applyFontSize();
                 }
             },
+
             zoomOut() {
                 if (this.fontSize > 9) {
                     this.fontSize -= 2;
                     this.applyFontSize();
                 }
             },
+
             applyFontSize() {
                 this.textarea.style.fontSize = `${this.fontSize}px`;
                 this.statZoom.textContent = `${this.fontSize}px`;
@@ -1432,6 +1561,7 @@
                 this.filenameLabel.textContent = filePath.split("/").pop();
                 this.statLang.textContent = this.detectLanguage(filePath);
                 this.applyFontSize();
+
                 this.page.classList.add("show");
 
                 try {
@@ -1470,7 +1600,10 @@
             }
         };
 
-        fileEditor.textarea.addEventListener("input", () => fileEditor.updateStats());
+        fileEditor.textarea.addEventListener("input", () => {
+            fileEditor.updateStats();
+        });
+
         fileEditor.textarea.addEventListener("keydown", (e) => {
             if (e.key === "Tab") {
                 e.preventDefault();
