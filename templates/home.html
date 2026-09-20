@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-  <title>JUBAYER HOSTING — Control Panel</title>
+  <title>Control Panel</title>
   
   <!-- FontAwesome 6 CDN (আগের কোডের ফাইল আইকনগুলোর জন্য) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -70,18 +70,6 @@
       font-weight: 700;
       color: #0f172a;
       margin-bottom: 0.2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .controls-title .brand-tag {
-      font-size: 0.72rem;
-      color: var(--primary);
-      background: var(--primary-light);
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-weight: 600;
     }
     
     .controls-subtitle {
@@ -386,7 +374,6 @@
       fill: #2563eb;
     }
 
-    /* ফাইল নামের ক্লিন ফন্ট (Courier New সরানো হয়েছে) */
     .fm-item-name {
       color: #1e293b;
       font-weight: 500;
@@ -743,10 +730,7 @@
   <div class="container">
     <!-- 1. SERVER CONTROLS CARD -->
     <div class="server-controls-card">
-      <div class="controls-title">
-        <span>Server Controls</span>
-        <span class="brand-tag">JUBAYER HOSTING</span>
-      </div>
+      <div class="controls-title">Server Controls</div>
       <div class="controls-subtitle">Start, stop or restart your server</div>
       <div class="control-buttons-grid">
         <button id="btn-detail-start" class="btn-control btn-ctrl-start" onclick="serverActions.start()">
@@ -1041,7 +1025,6 @@
       currentPath: "",
       currentFiles: [],
 
-      // আগের কোডের মতো ফাইল টাইপ অনুযায়ী আইকন ফাংশন
       getFileIcon(filename, isDir, isZip) {
         if (isDir) {
           return `<svg class="fm-item-icon folder" viewBox="0 0 24 24"><path d="M2.5 6.5A2.5 2.5 0 0 1 5 4h3.6c.7 0 1.35.3 1.8.85l1.2 1.45c.45.55 1.1.85 1.8.85H19a2.5 2.5 0 0 1 2.5 2.5v7.8a2.5 2.5 0 0 1-2.5 2.5H5a2.5 2.5 0 0 1-2.5-2.5V6.5z"/></svg>`;
