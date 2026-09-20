@@ -5,11 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
   <title>JUBAYER HOSTING — Control Panel</title>
   
-  <!-- Google Fonts: Inter & JetBrains Mono -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  
   <!-- ANSI Up for colored terminal output -->
   <script src="https://cdn.jsdelivr.net/npm/ansi_up@5.1.0/ansi_up.min.js"></script>
 
@@ -30,6 +25,10 @@
       --btn-restart: #2563eb;
       --danger: #ef4444;
       --danger-light: #fef2f2;
+
+      /* আগের কোডের ফন্ট */
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      --font-mono: 'Courier New', "JetBrains Mono", "Fira Code", "Cascadia Code", Consolas, Menlo, Monaco, monospace;
     }
 
     * {
@@ -39,7 +38,7 @@
     }
 
     body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-family: var(--font-sans);
       background-color: var(--bg);
       padding: 1.25rem 0.85rem;
       display: flex;
@@ -150,7 +149,7 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
       border: 1px solid #152238;
       padding: 1.15rem;
-      font-family: 'JetBrains Mono', monospace, Consolas, Courier;
+      font-family: var(--font-mono);
       font-size: 0.825rem;
       line-height: 1.6;
       color: #cbd5e1;
@@ -256,7 +255,7 @@
       height: 13px;
     }
 
-    /* Toolbar Actions: Upload, New Folder, New File */
+    /* Toolbar Actions */
     .fm-toolbar {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -367,7 +366,6 @@
       padding-right: 0.5rem;
     }
 
-    /* সলিড ব্লু ফোল্ডার আইকন */
     .fm-item-icon.folder {
       width: 20px;
       height: 20px;
@@ -390,7 +388,7 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--font-mono);
       font-size: 0.82rem;
     }
 
@@ -514,9 +512,7 @@
       color: #64748b;
     }
 
-    /* ===================================================
-       STARTUP CONFIGURATION CARD
-       =================================================== */
+    /* STARTUP CONFIGURATION CARD */
     .startup-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -541,7 +537,7 @@
       width: 100%;
       padding: 0.55rem 0.75rem;
       font-size: 0.825rem;
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--font-mono);
       border: 1px solid var(--border);
       border-radius: 8px;
       outline: none;
@@ -693,7 +689,7 @@
       height: 280px;
       background-color: #09101d;
       color: #f1f5f9;
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--font-mono);
       font-size: 0.8rem;
       line-height: 1.5;
       padding: 0.85rem;
@@ -875,9 +871,7 @@
   <!-- Toast Notification -->
   <div class="fm-toast" id="fm-toast">Changes saved</div>
 
-  <!-- ===================================================
-       JAVASCRIPT CONTROLLER (INTEGRATED WITH REAL BACKEND)
-       =================================================== -->
+  <!-- JAVASCRIPT CONTROLLER -->
   <script>
     "use strict";
 
@@ -929,7 +923,7 @@
       setTimeout(() => toastEl.classList.remove('show'), 2500);
     }
 
-    /* SVG ICONS (দ্বিতীয় কোডের সলিড ব্লু আইকন সহ) */
+    /* SVG ICONS */
     const ICONS = {
       folder: '<svg class="fm-item-icon folder" viewBox="0 0 24 24"><path d="M2.5 6.5A2.5 2.5 0 0 1 5 4h3.6c.7 0 1.35.3 1.8.85l1.2 1.45c.45.55 1.1.85 1.8.85H19a2.5 2.5 0 0 1 2.5 2.5v7.8a2.5 2.5 0 0 1-2.5 2.5H5a2.5 2.5 0 0 1-2.5-2.5V6.5z"/></svg>',
       file: '<svg class="fm-item-icon file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>',
@@ -1105,7 +1099,6 @@
           this.currentFiles = files;
           container.innerHTML = "";
 
-          // Sort: folders first, then alphabetically
           files.sort((a, b) => {
             const aDir = a.is_dir ? 1 : 0;
             const bDir = b.is_dir ? 1 : 0;
@@ -1113,7 +1106,6 @@
             return bDir - aDir;
           });
 
-          // Up directory row
           if (this.currentPath !== "") {
             const upRow = document.createElement("div");
             upRow.className = "fm-row";
