@@ -911,8 +911,7 @@
       promptCallback = callback;
       promptModal.classList.add('open');
       setTimeout(() => {
-        promptInput.focus();
-        promptInput.select();
+        promptInput.focus(); // কোনো টেক্সট সিলেক্ট হবে না, শুধু স্বাভাবিক ফোকাস থাকবে
       }, 50);
     }
 
