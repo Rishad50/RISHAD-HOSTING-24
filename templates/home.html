@@ -141,7 +141,7 @@
       border: 1px solid #152238;
       padding: 1.15rem;
       font-family: var(--font-mono);
-      font-size: 9px; /* টার্মিনাল টেক্সট সাইজ ৯ পিক্সেল */
+      font-size: 9px;
       line-height: 1.6;
       color: #cbd5e1;
       height: 280px;
@@ -172,78 +172,6 @@
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
       position: relative;
       margin-bottom: 1.15rem;
-    }
-
-    /* Breadcrumbs */
-    .fm-breadcrumb-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.5rem;
-      margin-bottom: 0.85rem;
-    }
-
-    .fm-breadcrumb {
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      font-size: 0.82rem;
-      color: #475569;
-      overflow-x: auto;
-      white-space: nowrap;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      padding: 0.2rem 0;
-    }
-
-    .fm-breadcrumb::-webkit-scrollbar {
-      display: none;
-    }
-
-    .crumb-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25rem;
-      cursor: pointer;
-      color: #64748b;
-      font-weight: 500;
-      transition: color 0.15s ease;
-      border-radius: 4px;
-      padding: 0.1rem 0.25rem;
-    }
-
-    .crumb-item:hover {
-      color: var(--primary);
-      background-color: var(--primary-light);
-    }
-
-    .crumb-item.active {
-      color: var(--text-dark);
-      font-weight: 600;
-      cursor: default;
-    }
-
-    .crumb-item.active:hover {
-      background-color: transparent;
-    }
-
-    .crumb-separator {
-      color: #94a3b8;
-      font-size: 0.8rem;
-      user-select: none;
-      display: inline-flex;
-      align-items: center;
-    }
-
-    .crumb-icon-home {
-      width: 15px;
-      height: 15px;
-      stroke-width: 2;
-    }
-
-    .crumb-icon-chevron {
-      width: 13px;
-      height: 13px;
     }
 
     /* Toolbar Actions */
@@ -753,11 +681,6 @@
 
     <!-- 3. FILE MANAGER CARD -->
     <div class="fm-card">
-      <!-- Breadcrumb Navigation -->
-      <div class="fm-breadcrumb-wrapper">
-        <div class="fm-breadcrumb" id="fm-breadcrumb"></div>
-      </div>
-
       <!-- Action Toolbar: Upload, New Folder, New File -->
       <div class="fm-toolbar">
         <input type="file" id="fm-upload-input" multiple style="display: none;" onchange="fileManager.handleUpload(event)" />
@@ -915,8 +838,6 @@
 
     /* SVG ICONS */
     const ICONS = {
-      home: '<svg class="crumb-icon-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>',
-      chevron: '<svg class="crumb-icon-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>',
       more: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>',
       edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>',
       download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>',
@@ -1047,53 +968,8 @@
         return `<i class="fa-solid fa-file" style="color: #94a3b8; font-size: 1.15rem;"></i>`;
       },
 
-      renderBreadcrumbs() {
-        const bc = document.getElementById('fm-breadcrumb');
-        bc.innerHTML = '';
-
-        const homeSpan = document.createElement('span');
-        homeSpan.className = 'crumb-item' + (!this.currentPath ? ' active' : '');
-        homeSpan.innerHTML = `${ICONS.home} <span>/</span>`;
-        homeSpan.onclick = () => {
-          if (this.currentPath) this.load("");
-        };
-        bc.appendChild(homeSpan);
-
-        const rootItem = document.createElement('span');
-        rootItem.className = 'crumb-item' + (!this.currentPath ? ' active' : '');
-        rootItem.textContent = 'root';
-        rootItem.onclick = () => {
-          if (this.currentPath) this.load("");
-        };
-        bc.appendChild(rootItem);
-
-        if (this.currentPath) {
-          const parts = this.currentPath.split("/").filter(Boolean);
-          let acc = "";
-          parts.forEach((p, index) => {
-            acc += (acc ? "/" : "") + p;
-            const target = acc;
-            const isLast = index === parts.length - 1;
-
-            const sep = document.createElement('span');
-            sep.className = 'crumb-separator';
-            sep.innerHTML = ICONS.chevron;
-            bc.appendChild(sep);
-
-            const folderSpan = document.createElement('span');
-            folderSpan.className = 'crumb-item' + (isLast ? ' active' : '');
-            folderSpan.textContent = p;
-            if (!isLast) {
-              folderSpan.onclick = () => this.load(target);
-            }
-            bc.appendChild(folderSpan);
-          });
-        }
-      },
-
       async load(path = this.currentPath) {
         this.currentPath = path;
-        this.renderBreadcrumbs();
         this.closeDropdown();
 
         const container = document.getElementById("fm-rows-container");
