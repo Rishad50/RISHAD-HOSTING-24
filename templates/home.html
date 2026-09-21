@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
   <title>Control Panel</title>
   
-  <!-- FontAwesome 6 CDN (আগের কোডের ফাইল আইকনগুলোর জন্য) -->
+  <!-- FontAwesome 6 CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
   <!-- ANSI Up for colored terminal output -->
@@ -32,6 +32,8 @@
       /* ফন্ট */
       --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
       --font-mono: 'JetBrains Mono', Consolas, Monaco, monospace;
+      
+      --nav-height: 62px;
     }
 
     * {
@@ -43,7 +45,7 @@
     body {
       font-family: var(--font-sans);
       background-color: var(--bg);
-      padding: 1.25rem 0.85rem;
+      padding: 1.15rem 0.85rem calc(var(--nav-height) + 1.25rem);
       display: flex;
       justify-content: center;
       color: var(--text-dark);
@@ -53,6 +55,21 @@
     .container {
       width: 100%;
       max-width: 520px;
+    }
+
+    /* Tab Page Views */
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(5px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
 
     /* SERVER CONTROLS CARD */
@@ -144,11 +161,11 @@
       font-size: 9px;
       line-height: 1.6;
       color: #cbd5e1;
-      height: 280px;
+      height: 380px;
       overflow-y: auto;
       white-space: pre-wrap;
       word-break: break-all;
-      margin-bottom: 1.15rem;
+      margin-bottom: 0.5rem;
       scrollbar-width: thin;
       scrollbar-color: #334155 transparent;
     }
@@ -161,9 +178,7 @@
       border-radius: 4px;
     }
 
-    /* ===================================================
-       FILE MANAGER CARD
-       =================================================== */
+    /* FILE MANAGER CARD */
     .fm-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -171,10 +186,8 @@
       padding: 1.15rem;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
       position: relative;
-      margin-bottom: 1.15rem;
     }
 
-    /* Toolbar Actions */
     .fm-toolbar {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -238,7 +251,6 @@
       }
     }
 
-    /* File List Container */
     .fm-list-box {
       border: 1px solid var(--border);
       border-radius: 10px;
@@ -247,7 +259,7 @@
     }
 
     .fm-rows-wrap {
-      max-height: 380px;
+      max-height: 480px;
       overflow-y: auto;
     }
 
@@ -408,7 +420,6 @@
       color: #dc2626;
     }
 
-    /* Empty state */
     .fm-empty-state {
       padding: 2.8rem 1rem;
       text-align: center;
@@ -499,7 +510,7 @@
       inset: 0;
       background-color: rgba(15, 23, 42, 0.55);
       backdrop-filter: blur(3px);
-      z-index: 100;
+      z-index: 1000;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -629,20 +640,20 @@
     /* Toast Notification */
     .fm-toast {
       position: fixed;
-      bottom: 20px;
+      bottom: calc(var(--nav-height) + 15px);
       left: 50%;
-      transform: translateX(-50%) translateY(50px);
+      transform: translateX(-50%) translateY(30px);
       background-color: #0f172a;
       color: #ffffff;
       padding: 0.55rem 1.15rem;
       border-radius: 30px;
       font-size: 0.78rem;
       font-weight: 500;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
       opacity: 0;
       visibility: hidden;
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      z-index: 200;
+      z-index: 1100;
       white-space: nowrap;
     }
 
@@ -651,94 +662,191 @@
       opacity: 1;
       visibility: visible;
     }
+
+    /* ===================================================
+       BOTTOM NAVIGATION BAR
+       =================================================== */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: var(--nav-height);
+      background: #ffffff;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 0.5rem;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      box-shadow: 0 -4px 18px rgba(15, 23, 42, 0.05);
+      z-index: 999;
+    }
+
+    .nav-btn {
+      flex: 1;
+      max-width: 140px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      height: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      color: #94a3b8;
+      font-size: 0.69rem;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      transition: color 0.15s ease, transform 0.1s ease;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+    }
+
+    .nav-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke-width: 2.1;
+      transition: stroke 0.15s ease, transform 0.15s ease;
+    }
+
+    .nav-btn:active {
+      transform: scale(0.93);
+    }
+
+    .nav-btn.active {
+      color: var(--primary);
+    }
+
+    .nav-btn.active svg {
+      stroke: var(--primary);
+      transform: translateY(-1px);
+    }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <!-- 1. SERVER CONTROLS CARD -->
-    <div class="server-controls-card">
-      <div class="controls-title">Server Controls</div>
-      <div class="controls-subtitle">Start, stop or restart your server</div>
-      <div class="control-buttons-grid">
-        <button id="btn-detail-start" class="btn-control btn-ctrl-start" onclick="serverActions.start()">
-          <svg class="ctrl-icon" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
-          <span>Start</span>
-        </button>
-        <button id="btn-detail-stop" class="btn-control btn-ctrl-stop" onclick="serverActions.stop()">
-          <svg class="ctrl-icon" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="1.5"></rect></svg>
-          <span>Stop</span>
-        </button>
-        <button id="btn-detail-restart" class="btn-control btn-ctrl-restart" onclick="serverActions.restart()">
-          <svg class="ctrl-icon" viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
-          <span>Restart</span>
-        </button>
+    
+    <!-- VIEW 1: HOME TAB -->
+    <div id="tab-home" class="tab-content active">
+      <!-- 1. SERVER CONTROLS CARD -->
+      <div class="server-controls-card">
+        <div class="controls-title">Server Controls</div>
+        <div class="controls-subtitle">Start, stop or restart your server</div>
+        <div class="control-buttons-grid">
+          <button id="btn-detail-start" class="btn-control btn-ctrl-start" onclick="serverActions.start()">
+            <svg class="ctrl-icon" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
+            <span>Start</span>
+          </button>
+          <button id="btn-detail-stop" class="btn-control btn-ctrl-stop" onclick="serverActions.stop()">
+            <svg class="ctrl-icon" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="1.5"></rect></svg>
+            <span>Stop</span>
+          </button>
+          <button id="btn-detail-restart" class="btn-control btn-ctrl-restart" onclick="serverActions.restart()">
+            <svg class="ctrl-icon" viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+            <span>Restart</span>
+          </button>
+        </div>
       </div>
+
+      <!-- 2. TERMINAL WINDOW CARD -->
+      <div id="detail-recent-logs" class="terminal-card">Connecting to server logs...</div>
     </div>
 
-    <!-- 2. TERMINAL WINDOW CARD -->
-    <div id="detail-recent-logs" class="terminal-card">Connecting to server logs...</div>
+    <!-- VIEW 2: FILE MANAGER TAB -->
+    <div id="tab-files" class="tab-content">
+      <div class="fm-card">
+        <!-- Action Toolbar: Upload, New Folder, New File -->
+        <div class="fm-toolbar">
+          <input type="file" id="fm-upload-input" multiple style="display: none;" onchange="fileManager.handleUpload(event)" />
+          <button class="fm-btn fm-btn-primary" id="fm-btn-upload" onclick="document.getElementById('fm-upload-input').click()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <span>Upload</span>
+          </button>
+          <button class="fm-btn fm-btn-outline" id="fm-btn-new-folder" onclick="fileManager.openNewFolderModal()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"></path>
+              <line x1="12" y1="11" x2="12" y2="17"></line>
+              <line x1="9" y1="14" x2="15" y2="14"></line>
+            </svg>
+            <span>New Folder</span>
+          </button>
+          <button class="fm-btn fm-btn-outline" id="fm-btn-new-file" onclick="fileManager.openNewFileModal()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>New File</span>
+          </button>
+        </div>
 
-    <!-- 3. FILE MANAGER CARD -->
-    <div class="fm-card">
-      <!-- Action Toolbar: Upload, New Folder, New File -->
-      <div class="fm-toolbar">
-        <input type="file" id="fm-upload-input" multiple style="display: none;" onchange="fileManager.handleUpload(event)" />
-        <button class="fm-btn fm-btn-primary" id="fm-btn-upload" onclick="document.getElementById('fm-upload-input').click()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-            <polyline points="17 8 12 3 7 8"></polyline>
-            <line x1="12" y1="3" x2="12" y2="15"></line>
-          </svg>
-          <span>Upload</span>
-        </button>
-        <button class="fm-btn fm-btn-outline" id="fm-btn-new-folder" onclick="fileManager.openNewFolderModal()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"></path>
-            <line x1="12" y1="11" x2="12" y2="17"></line>
-            <line x1="9" y1="14" x2="15" y2="14"></line>
-          </svg>
-          <span>New Folder</span>
-        </button>
-        <button class="fm-btn fm-btn-outline" id="fm-btn-new-file" onclick="fileManager.openNewFileModal()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-          <span>New File</span>
-        </button>
-      </div>
-
-      <!-- File List Box -->
-      <div class="fm-list-box">
-        <div class="fm-rows-wrap" id="fm-rows-container">
-          <div class="fm-empty-state">
-            <div class="fm-empty-text">Loading files...</div>
+        <!-- File List Box -->
+        <div class="fm-list-box">
+          <div class="fm-rows-wrap" id="fm-rows-container">
+            <div class="fm-empty-state">
+              <div class="fm-empty-text">Loading files...</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 4. STARTUP CONFIGURATION CARD -->
-    <div class="startup-card">
-      <div class="controls-title" style="margin-bottom: 0.2rem;">Startup Configuration</div>
-      <div class="controls-subtitle">Python server entrypoint script and dependencies</div>
-      <form id="startup-form" onsubmit="startupConfig.save(event)">
-        <div class="form-group">
-          <label class="form-label" for="startup-main-file">Main Entrypoint Script</label>
-          <input type="text" id="startup-main-file" class="form-input" placeholder="main.py" required />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="startup-req-file">Requirements File</label>
-          <input type="text" id="startup-req-file" class="form-input" placeholder="requirements.txt" />
-        </div>
-        <button type="submit" class="btn-startup-save">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline></svg>
-          <span>Save Startup Config</span>
-        </button>
-      </form>
+    <!-- VIEW 3: STARTUP CONFIGURATION TAB -->
+    <div id="tab-startup" class="tab-content">
+      <div class="startup-card">
+        <div class="controls-title" style="margin-bottom: 0.2rem;">Startup Configuration</div>
+        <div class="controls-subtitle">Python server entrypoint script and dependencies</div>
+        <form id="startup-form" onsubmit="startupConfig.save(event)">
+          <div class="form-group">
+            <label class="form-label" for="startup-main-file">Main Entrypoint Script</label>
+            <input type="text" id="startup-main-file" class="form-input" placeholder="main.py" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="startup-req-file">Requirements File</label>
+            <input type="text" id="startup-req-file" class="form-input" placeholder="requirements.txt" />
+          </div>
+          <button type="submit" class="btn-startup-save">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline></svg>
+            <span>Save Startup Config</span>
+          </button>
+        </form>
+      </div>
     </div>
+
   </div>
+
+  <!-- FIXED BOTTOM NAVIGATION BAR -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" onclick="nav.switch('home')" id="nav-btn-home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+      <span>Home</span>
+    </button>
+
+    <button class="nav-btn" onclick="nav.switch('files')" id="nav-btn-files">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+      </svg>
+      <span>Files</span>
+    </button>
+
+    <button class="nav-btn" onclick="nav.switch('startup')" id="nav-btn-startup">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+      </svg>
+      <span>Startup</span>
+    </button>
+  </nav>
 
   <!-- Shared Dropdown Action Menu -->
   <div class="fm-dropdown-menu" id="fm-dropdown"></div>
@@ -794,6 +902,27 @@
     };
 
     const ansiUp = new AnsiUp();
+
+    /* NAVIGATION CONTROLLER */
+    const nav = {
+      currentTab: 'home',
+      switch(tabName) {
+        this.currentTab = tabName;
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+
+        const targetView = document.getElementById(`tab-${tabName}`);
+        const targetBtn = document.getElementById(`nav-btn-${tabName}`);
+
+        if (targetView) targetView.classList.add('active');
+        if (targetBtn) targetBtn.classList.add('active');
+
+        // ফাইল ম্যানেজারে ক্লিক করলে সাথে সাথে লেটেস্ট ডিরেক্টরি রিফ্রেশ করবে
+        if (tabName === 'files') {
+          fileManager.load();
+        }
+      }
+    };
 
     /* API CLIENT */
     const api = {
@@ -911,7 +1040,7 @@
       promptCallback = callback;
       promptModal.classList.add('open');
       setTimeout(() => {
-        promptInput.focus(); // কোনো টেক্সট সিলেক্ট হবে না, শুধু স্বাভাবিক ফোকাস থাকবে
+        promptInput.focus();
       }, 50);
     }
 
@@ -1321,7 +1450,6 @@
 
     /* INITIAL LOAD */
     document.addEventListener("DOMContentLoaded", () => {
-      fileManager.load("");
       startupConfig.load();
       pollLogs();
       setInterval(pollLogs, CONFIG.LOGS_POLL_INTERVAL);
