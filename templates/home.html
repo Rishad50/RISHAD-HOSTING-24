@@ -149,13 +149,13 @@
     .btn-ctrl-stop { background-color: var(--btn-stop); }
     .btn-ctrl-restart { background-color: var(--btn-restart); }
 
-    /* TERMINAL CARD */
+    /* TERMINAL CARD (আপনার দাগ দেওয়া স্থানে লেখা উপরে নেওয়া হয়েছে) */
     .terminal-card {
       background: #09101d;
       border-radius: 14px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
       border: 1px solid #152238;
-      padding: 1.15rem;
+      padding: 0.45rem 1.15rem 1.15rem 1.15rem; /* ওপরের প্যাডিং কমিয়ে দাগের স্থানে আনা হয়েছে */
       font-family: var(--font-mono);
       font-size: 9px;
       line-height: 1.6;
@@ -662,9 +662,7 @@
       visibility: visible;
     }
 
-    /* ===================================================
-       FLOATING BOTTOM NAVIGATION BAR
-       =================================================== */
+    /* FLOATING BOTTOM NAVIGATION BAR */
     .bottom-nav {
       position: fixed;
       bottom: max(14px, env(safe-area-inset-bottom, 14px));
@@ -720,7 +718,6 @@
       transform: scale(0.92);
     }
 
-    /* Active State (Pill effect only - Dot removed) */
     .nav-btn.active {
       color: var(--primary);
       background-color: var(--primary-light);
@@ -848,7 +845,7 @@
     <button class="nav-btn" role="tab" aria-selected="false" aria-controls="tab-startup" onclick="nav.switch('startup')" id="nav-btn-startup">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="3"></circle>
-        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
       </svg>
       <span>Startup</span>
     </button>
